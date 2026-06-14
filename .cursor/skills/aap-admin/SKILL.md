@@ -105,7 +105,29 @@ Values with **spaces** (e.g. `Demo Inventory`) → use JSON or `-e @vars/...`.
   -e 'rrule=DTSTART:20260614T080000Z RRULE:FREQ=DAILY;INTERVAL=1'
 ```
 
+## Deployments (`deployments/` at repo root)
+
+Versioned stacks live **outside** the skill — one folder per environment/org. The skill only provides scripts; deployments define what to apply.
+
+```bash
+# Apply entire deployment
+./apply-deployment teste-cursor
+
+# Single resource (absolute path — scripts run from skill directory)
+./aap create-project.sh -e "@$(pwd)/deployments/teste-cursor/02-project-aap-backup.yml"
+```
+
+Naming convention: `NN-<resource>-<name>.yml` (e.g. `02-project-aap-backup.yml`).
+
+| Deployment | Organization | Purpose |
+|------------|--------------|---------|
+| `teste-cursor` | `teste cursor` | AAP backup automation stack |
+
+See `deployments/README.md` to add new stacks.
+
 ## Examples in vars/examples/
+
+Generic templates (copy and adapt). For real stacks, use `deployments/<name>/`.
 
 | File | Resource |
 |------|----------|

@@ -1,0 +1,8 @@
+---
+job_template_name: configure-backup-project
+organization: teste cursor
+inventory: backup-inventory
+project: aap_backup_automation
+playbook: main-configure-backup-project.yml
+execution_environment: ee-cac-rhel9
+description: Configure backup project settings on localhost

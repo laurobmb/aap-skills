@@ -1,0 +1,8 @@
+---
+group_name: automationcontroller
+inventory: backup-inventory
+description: Automation Controller cluster nodes
+group_hosts:
+  - ansible-automation-platform-01.lagomes.rhbr-lab.com
+  - ansible-automation-platform-02.lagomes.rhbr-lab.com
+  - ansible-automation-platform-03.lagomes.rhbr-lab.com

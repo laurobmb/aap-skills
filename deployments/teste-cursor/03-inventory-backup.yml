@@ -1,0 +1,4 @@
+---
+inventory_name: backup-inventory
+organization: teste cursor
+description: Inventory for AAP backup jobs

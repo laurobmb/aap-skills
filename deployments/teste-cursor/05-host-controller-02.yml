@@ -1,0 +1,5 @@
+---
+host_name: ansible-automation-platform-02.lagomes.rhbr-lab.com
+inventory: backup-inventory
+variables:
+  ansible_host: ansible-automation-platform-02.lagomes.rhbr-lab.com

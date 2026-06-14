@@ -19,7 +19,7 @@ This repository addresses that with:
 | **Isolation** | Everything runs inside the EE; the host only needs `ansible-navigator` and `podman` |
 | **Fewer API errors** | `ansible.controller` modules instead of ad hoc malformed calls |
 | **Faster onboarding** | New operators ask the agent to "create a job template" instead of navigating the full UI |
-| **GitOps-friendly** | Versioned scripts; examples in `vars/examples/` |
+| **GitOps-friendly** | Versioned scripts; stacks in `deployments/`; templates in `vars/examples/` |
 
 ### Security considerations
 
@@ -45,9 +45,20 @@ The goal is not to replace the human operator, but to **speed up routine tasks**
 .cursor/skills/aap-admin/     # resource creation
 .cursor/skills/aap-operate/   # day-to-day operations
 .cursor/rules/                # guardrails for the agent
+deployments/                  # versioned stacks per org/environment
 ```
 
 **No Ansible collections required on the host** — everything runs via `ansible-navigator` + EE `quay.io/lagomes/ee-cac-rhel9:v7`.
+
+## Deployments
+
+Reusable stacks (vars files) live at repo root — separate from skill logic:
+
+```bash
+./apply-deployment teste-cursor
+```
+
+See `deployments/README.md`.
 
 ## Setup
 
@@ -56,7 +67,7 @@ cp .cursor/skills/aap-admin/vars/local.yml.example \
    .cursor/skills/aap-admin/vars/local.yml
 
 chmod +x .cursor/skills/aap-admin/scripts/*.sh \
-         .cursor/skills/aap-operate/scripts/*.sh aap operate
+         .cursor/skills/aap-operate/scripts/*.sh aap operate apply-deployment
 ```
 
 ## Usage — create (aap-admin)

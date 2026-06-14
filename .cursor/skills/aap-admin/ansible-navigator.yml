@@ -13,6 +13,9 @@ ansible-navigator:
       - src: .
         dest: /runner/project
         options: Z
+      - src: ../../..
+        dest: /runner/repo
+        options: Z
   logging:
     level: warning
   mode: stdout

@@ -1,0 +1,10 @@
+---
+job_template_name: backup-aap
+organization: teste cursor
+inventory: backup-inventory
+project: aap_backup_automation
+playbook: main-backup.yml
+execution_environment: ee-cac-rhel9
+limit: automationcontroller
+become_enabled: true
+description: Run AAP backup against automationcontroller nodes

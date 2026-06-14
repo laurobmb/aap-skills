@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Repo root shortcut → apply a deployment stack
+set -euo pipefail
+SKILL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.cursor/skills/aap-admin" && pwd)"
+deployment="${1:?Usage: ./apply-deployment <deployment-name>}"
+exec "${SKILL_ROOT}/scripts/apply-deployment.sh" "${deployment}"

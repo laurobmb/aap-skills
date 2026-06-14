@@ -1,0 +1,7 @@
+---
+project_name: aap_backup_automation
+organization: teste cursor
+scm_type: git
+scm_url: https://github.com/laurobmb/aap_backup_automation
+scm_branch: main
+description: Backup automation AAP - https://github.com/laurobmb/aap_backup_automation

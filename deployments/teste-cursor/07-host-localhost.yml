@@ -1,0 +1,5 @@
+---
+host_name: localhost
+inventory: backup-inventory
+variables:
+  ansible_connection: local
