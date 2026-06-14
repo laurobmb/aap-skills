@@ -13,7 +13,7 @@
         that:
           - notification_configuration is defined
         fail_msg: >-
-          Defina notification_configuration, ex.:
+          Set notification_configuration with -e, e.g.:
           -e notification_type=webhook
           -e '{"notification_configuration":{"url":"https://example.com/hook"}}'
       vars:

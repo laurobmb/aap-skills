@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Helper: corre playbook com ansible-navigator + vars locais do AAP
+# Helper: run playbook with ansible-navigator + local AAP vars
 set -euo pipefail
 
 aap_run() {
@@ -14,8 +14,8 @@ aap_run() {
     if [[ -f "${shared_vars}" ]]; then
       cp "${shared_vars}" "${vars_file}"
     else
-      echo "Erro: credenciais não encontradas." >&2
-      echo "Configure ${root}/vars/local.yml ou ../aap-admin/vars/local.yml" >&2
+      echo "Error: credentials not found." >&2
+      echo "Configure ${root}/vars/local.yml or ../aap-admin/vars/local.yml" >&2
       exit 1
     fi
   fi

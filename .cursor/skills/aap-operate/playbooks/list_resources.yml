@@ -20,7 +20,7 @@
         that:
           - resource_type in _resource_endpoints
         fail_msg: >-
-          resource_type inválido. Use:
+          Invalid resource_type. Use:
           organizations, projects, job_templates, jobs, inventories
       vars:
         resource_type: "{{ resource_type | mandatory }}"
@@ -76,4 +76,4 @@
 
     - name: Total count
       ansible.builtin.debug:
-        msg: "{{ resource_type }}: {{ _resource_list.json.count }} encontrado(s)"
+        msg: "{{ resource_type }}: {{ _resource_list.json.count }} found"

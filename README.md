@@ -1,53 +1,53 @@
 # aap-skills
 
-Skills e rules para administrar o **Ansible Automation Platform (AAP) 2.6** com agentes de IA (Cursor), de forma repetível e auditável.
+Skills and rules to administer **Ansible Automation Platform (AAP) 2.6** with AI agents (Cursor), in a repeatable and auditable way.
 
-## Porquê skills e rules para o AAP?
+## Why skills and rules for AAP?
 
-Operar um AAP envolve dezenas de recursos interligados — organizations, projects, inventories, credentials, job templates, workflows e execution environments. Um agente de IA sem contexto pode inventar parâmetros, usar a API de forma inconsistente ou aplicar alterações destrutivas por interpretação errada de um pedido.
+Operating AAP involves dozens of interconnected resources — organizations, projects, inventories, credentials, job templates, workflows, and execution environments. An AI agent without context may invent parameters, call the API inconsistently, or apply destructive changes due to a misinterpreted request.
 
-Este repositório resolve isso com:
+This repository addresses that with:
 
-- **Skills** (`aap-admin`, `aap-operate`) — scripts e playbooks testados que o agente executa via `ansible-navigator` e uma EE fixa (`quay.io/lagomes/ee-cac-rhel9:v7`), sem instalar collections no host
-- **Rules** (`.cursor/rules/`) — limites de comportamento: branch de trabalho, defaults automáticos, **proibição de delete sem confirmação humana**, proteção de credenciais
+- **Skills** (`aap-admin`, `aap-operate`) — tested scripts and playbooks the agent runs via `ansible-navigator` and a fixed EE (`quay.io/lagomes/ee-cac-rhel9:v7`), without installing collections on the host
+- **Rules** (`.cursor/rules/`) — behavioral guardrails: working branch, automatic defaults, **no delete without human confirmation**, credential protection
 
-### Vantagens
+### Benefits
 
-| Vantagem | Como |
-|----------|------|
-| **Repetibilidade** | O mesmo pedido em linguagem natural gera o mesmo script/playbook |
-| **Isolamento** | Tudo corre dentro da EE; o host só precisa de `ansible-navigator` e `podman` |
-| **Menos erros de API** | Módulos `ansible.controller` em vez de chamadas ad hoc mal formadas |
-| **Onboarding rápido** | Novos operadores pedem ao agente "cria um job template" em vez de navegar toda a UI |
-| **GitOps-friendly** | Scripts versionados; exemplos em `vars/examples/` |
+| Benefit | How |
+|---------|-----|
+| **Repeatability** | The same natural-language request produces the same script/playbook |
+| **Isolation** | Everything runs inside the EE; the host only needs `ansible-navigator` and `podman` |
+| **Fewer API errors** | `ansible.controller` modules instead of ad hoc malformed calls |
+| **Faster onboarding** | New operators ask the agent to "create a job template" instead of navigating the full UI |
+| **GitOps-friendly** | Versioned scripts; examples in `vars/examples/` |
 
-### Cuidados de segurança na operação
+### Security considerations
 
-- **Credenciais** ficam em `vars/local.yml` (gitignored) — nunca no repositório nem no chat
-- **Remoção bloqueada por rule** — o agente não pode usar `state: absent` nem DELETE na API sem confirmação humana explícita (ver `.cursor/rules/aap-safety.mdc`)
-- **Jobs são execução real** — `launch-job.sh` dispara automação nos hosts; validar template, inventory e limit antes de lançar
-- **Defaults automáticos** — inventory, EE e credential podem ser inferidos; em produção, especificar explicitamente quando o default não for aceitável
-- **Princípio do menor privilégio** — usar conta AAP dedicada ao agente, não `admin`, quando possível
-- **Auditoria** — rever artifacts do ansible-navigator e o activity stream do controller após alterações sensíveis
+- **Credentials** live in `vars/local.yml` (gitignored) — never in the repository or chat
+- **Deletion blocked by rule** — the agent cannot use `state: absent` or API DELETE without explicit human confirmation (see `.cursor/rules/aap-safety.mdc`)
+- **Jobs are real execution** — `launch-job.sh` runs automation on hosts; validate template, inventory, and limit before launching
+- **Automatic defaults** — inventory, EE, and credential may be inferred; in production, specify explicitly when the default is not acceptable
+- **Least privilege** — use a dedicated AAP account for the agent, not `admin`, when possible
+- **Audit** — review ansible-navigator artifacts and the controller activity stream after sensitive changes
 
-O objetivo não é substituir o operador humano, mas **acelerar tarefas rotineiras** mantendo guardrails claros.
+The goal is not to replace the human operator, but to **speed up routine tasks** with clear guardrails.
 
 ---
 
 ## Skills
 
-| Skill | Atalho | Função |
-|-------|--------|--------|
-| `aap-admin` | `./aap` | **Criar** recursos (org, project, JT, etc.) |
-| `aap-operate` | `./operate` | **Operar** (launch job, sync project, listar) |
+| Skill | Shortcut | Purpose |
+|-------|----------|---------|
+| `aap-admin` | `./aap` | **Create** resources (org, project, JT, etc.) |
+| `aap-operate` | `./operate` | **Operate** (launch job, sync project, list) |
 
 ```
-.cursor/skills/aap-admin/     # criação de recursos
-.cursor/skills/aap-operate/   # operação do dia-a-dia
-.cursor/rules/                # guardrails para o agente
+.cursor/skills/aap-admin/     # resource creation
+.cursor/skills/aap-operate/   # day-to-day operations
+.cursor/rules/                # guardrails for the agent
 ```
 
-**Não precisa de collections Ansible no host** — tudo via `ansible-navigator` + EE `quay.io/lagomes/ee-cac-rhel9:v7`.
+**No Ansible collections required on the host** — everything runs via `ansible-navigator` + EE `quay.io/lagomes/ee-cac-rhel9:v7`.
 
 ## Setup
 
@@ -59,17 +59,17 @@ chmod +x .cursor/skills/aap-admin/scripts/*.sh \
          .cursor/skills/aap-operate/scripts/*.sh aap operate
 ```
 
-## Uso — criar (aap-admin)
+## Usage — create (aap-admin)
 
 ```bash
 ./aap verify-aap.sh
 
 ./aap create-job-template.sh \
-  -e job_template_name=meu-job \
+  -e job_template_name=my-job \
   -e '{"inventory":"Demo Inventory","project":"Demo Project","playbook":"hello_world.yml"}'
 ```
 
-## Uso — operar (aap-operate)
+## Usage — operate (aap-operate)
 
 ```bash
 ./operate list-resources.sh -e resource_type=job_templates -e organization="teste cursor"
@@ -79,8 +79,8 @@ chmod +x .cursor/skills/aap-admin/scripts/*.sh \
 ./operate launch-job.sh -e job_template_name=backup-aap -e organization="teste cursor"
 ```
 
-Ver `.cursor/skills/aap-admin/SKILL.md` e `.cursor/skills/aap-operate/SKILL.md`.
+See `.cursor/skills/aap-admin/SKILL.md` and `.cursor/skills/aap-operate/SKILL.md`.
 
 ## Branch
 
-Desenvolvimento na branch **`v2.6`**.
+Development on branch **`v2.6`**.

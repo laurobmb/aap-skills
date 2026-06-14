@@ -27,4 +27,4 @@
         workflow_name: "{{ workflow_name | mandatory }}"
 
     - ansible.builtin.debug:
-        msg: "Workflow '{{ workflow_name }}' em '{{ organization | default(aap_organization_default) }}'"
+        msg: "Workflow '{{ workflow_name }}' in '{{ organization | default(aap_organization_default) }}'"

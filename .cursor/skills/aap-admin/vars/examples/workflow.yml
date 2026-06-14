@@ -1,7 +1,7 @@
 ---
 workflow_name: aap-skills-workflow-test
 organization: Default
-description: Workflow de teste
+description: Test workflow
 inventory: Demo Inventory
 workflow_nodes:
   - identifier: node1

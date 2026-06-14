@@ -5,4 +5,4 @@
       - aap_host is defined
       - aap_username is defined
       - aap_password is defined
-    fail_msg: "Credenciais em falta. Configure vars/local.yml"
+    fail_msg: "Missing credentials. Configure vars/local.yml"

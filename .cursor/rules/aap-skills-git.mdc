@@ -1,24 +1,24 @@
 ---
-description: Git e commits no repositório aap-skills (branch v2.6)
+description: Git and commits for the aap-skills repository (v2.6 branch)
 alwaysApply: true
 ---
 
-# Git — branch v2.6
+# Git — v2.6 branch
 
-Este repositório é o workspace de skills para administrar o Ansible Automation Platform (AAP) da Red Hat.
+This repository is the workspace for skills that administer Red Hat Ansible Automation Platform (AAP).
 
-## Branch de trabalho
+## Working branch
 
-- Trabalhar e commitar **sempre na branch `v2.6`**.
-- Não commitar em `main` salvo pedido explícito do utilizador.
+- Always work and commit on branch **`v2.6`**.
+- Do not commit to `main` unless the user explicitly requests it.
 
 ## Commits
 
-- **Pode commitar** neste repositório quando o utilizador pedir ou quando concluir uma tarefa que implique persistir alterações.
-- Seguir o estilo de mensagens do repositório quando existir histórico.
-- Não fazer push sem pedido explícito.
+- **May commit** to this repository when the user asks or when completing a task that requires persisting changes.
+- Follow the repository commit message style when history exists.
+- Do not push without an explicit request.
 
-## Ficheiros sensíveis
+## Sensitive files
 
-- Nunca commitar credenciais, tokens AAP, vault passwords ou ficheiros `.env` com segredos.
-- Usar variáveis de ambiente ou ficheiros locais ignorados pelo `.gitignore`.
+- Never commit credentials, AAP tokens, vault passwords, or `.env` files with secrets.
+- Use environment variables or local files ignored by `.gitignore`.

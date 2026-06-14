@@ -21,4 +21,4 @@
         label_name: "{{ label_name | mandatory }}"
 
     - ansible.builtin.debug:
-        msg: "Label '{{ label_name }}' em '{{ organization | default(aap_organization_default) }}'"
+        msg: "Label '{{ label_name }}' in '{{ organization | default(aap_organization_default) }}'"

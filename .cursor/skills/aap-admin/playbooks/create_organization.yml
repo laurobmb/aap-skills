@@ -21,4 +21,4 @@
         organization_name: "{{ organization_name | mandatory }}"
 
     - ansible.builtin.debug:
-        msg: "Organization '{{ organization_name }}' criada/atualizada"
+        msg: "Organization '{{ organization_name }}' created/updated"

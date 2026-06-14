@@ -1,60 +1,60 @@
 ---
 name: aap-admin
 description: >-
-  Cria e gere recursos no Ansible Automation Platform (AAP) 2.6 via scripts
-  e playbooks com ansible-navigator e EE quay.io/lagomes/ee-cac-rhel9:v7.
-  Usar quando o utilizador pedir criar ou configurar organization, project,
-  inventory, host, group, credential, job template, workflow, schedule, team,
-  user, label, notification, execution environment ou instance group no AAP.
+  Creates and manages resources on Ansible Automation Platform (AAP) 2.6 via
+  scripts and playbooks with ansible-navigator and EE quay.io/lagomes/ee-cac-rhel9:v7.
+  Use when the user asks to create or configure organization, project, inventory,
+  host, group, credential, job template, workflow, schedule, team, user, label,
+  notification, execution environment, or instance group on AAP.
 ---
 
 # AAP Admin (2.6)
 
-Tudo nesta skill vive em `.cursor/skills/aap-admin/` (playbooks, scripts, vars).
+Everything in this skill lives under `.cursor/skills/aap-admin/` (playbooks, scripts, vars).
 
-## Regra principal
+## Main rule
 
-**Sempre** usar os scripts em `.cursor/skills/aap-admin/scripts/` — correm via `ansible-navigator` + EE (sem collections locais).
+**Always** use scripts in `.cursor/skills/aap-admin/scripts/` — they run via `ansible-navigator` + EE (no local collections).
 
-**Nunca** remover recursos (`state: absent`, DELETE na API) sem confirmação humana explícita — ver `.cursor/rules/aap-safety.mdc`.
+**Never** remove resources (`state: absent`, API DELETE) without explicit human confirmation — see `.cursor/rules/aap-safety.mdc`.
 
 ```bash
-# Da raiz do repo
+# From repo root
 ./aap create-job-template.sh -e @.cursor/skills/aap-admin/vars/examples/job-template.yml
 
-# Ou dentro da skill
+# Or inside the skill
 cd .cursor/skills/aap-admin
-./scripts/create-<recurso>.sh -e @vars/examples/<recurso>.yml
+./scripts/create-<resource>.sh -e @vars/examples/<resource>.yml
 ```
 
-Credenciais do controller: `.cursor/skills/aap-admin/vars/local.yml` (gitignored).
+Controller credentials: `.cursor/skills/aap-admin/vars/local.yml` (gitignored).
 
-## Defaults automáticos
+## Automatic defaults
 
-Se **inventory**, **credential** ou **EE** não forem informados, os playbooks resolvem automaticamente a partir do AAP (ver `.cursor/rules/aap-defaults.mdc`):
+If **inventory**, **credential**, or **EE** are not specified, playbooks resolve them automatically from AAP (see `.cursor/rules/aap-defaults.mdc`):
 
-| Recurso | Ordem de resolução |
-|---------|-------------------|
-| Inventory | 1º da organização → `Demo Inventory` |
-| EE | default da org → `Default execution environment` → `ee-cac-rhel9` |
-| Credential | 1ª Machine da organização → omitir se não existir |
+| Resource | Resolution order |
+|----------|------------------|
+| Inventory | First in organization → `Demo Inventory` |
+| EE | Org default → `Default execution environment` → `ee-cac-rhel9` |
+| Credential | First Machine in organization → omit if none exists |
 
-## Fluxo do agente
+## Agent workflow
 
-1. Identificar o recurso pedido (tabela abaixo).
-2. Recolher parâmetros obrigatórios — perguntar só o que faltar.
-3. Executar o script (via `./aap <script>` na raiz ou `./scripts/<script>` na skill).
-4. Confirmar `changed`/`ok` no output.
+1. Identify the requested resource (table below).
+2. Collect required parameters — ask only for what is missing.
+3. Run the script (via `./aap <script>` from root or `./scripts/<script>` in the skill).
+4. Confirm `changed`/`ok` in the output.
 
-Valores com **espaços** (ex.: `Demo Inventory`) → usar JSON ou ficheiro `-e @vars/...`.
+Values with **spaces** (e.g. `Demo Inventory`) → use JSON or `-e @vars/...`.
 
-## Scripts disponíveis
+## Available scripts
 
-| Recurso | Script | Variável nome | Obrigatórios |
-|---------|--------|---------------|--------------|
-| Ligação | `verify-aap.sh` | — | — |
+| Resource | Script | Name variable | Required |
+|----------|--------|---------------|----------|
+| Connectivity | `verify-aap.sh` | — | — |
 | Organization | `create-organization.sh` | `organization_name` | `organization_name` |
-| Project | `create-project.sh` | `project_name` | `project_name`, `scm_url` (se git) |
+| Project | `create-project.sh` | `project_name` | `project_name`, `scm_url` (if git) |
 | Inventory | `create-inventory.sh` | `inventory_name` | `inventory_name` |
 | Host | `create-host.sh` | `host_name` | `host_name`, `inventory` |
 | Group | `create-group.sh` | `group_name` | `group_name`, `inventory` |
@@ -70,9 +70,9 @@ Valores com **espaços** (ex.: `Demo Inventory`) → usar JSON ou ficheiro `-e @
 | Notification | `create-notification-template.sh` | `notification_name` | `notification_name`, `notification_type`, `notification_configuration` |
 | Instance group | `create-instance-group.sh` | `instance_group_name` | `instance_group_name` |
 
-`organization` default: `Default` (exceto organization).
+`organization` default: `Default` (except for organization resource).
 
-## Exemplos rápidos
+## Quick examples
 
 ### Job template
 
@@ -82,7 +82,7 @@ Valores com **espaços** (ex.: `Demo Inventory`) → usar JSON ou ficheiro `-e @
   -e '{"inventory":"Demo Inventory","project":"Demo Project","playbook":"hello_world.yml"}'
 ```
 
-### Credential Machine
+### Machine credential
 
 ```bash
 ./scripts/create-credential.sh \
@@ -90,7 +90,7 @@ Valores com **espaços** (ex.: `Demo Inventory`) → usar JSON ou ficheiro `-e @
   -e '{"inputs":{"username":"ansible","password":"secret"}}'
 ```
 
-### Workflow com um job
+### Workflow with one job
 
 ```bash
 ./scripts/create-workflow.sh -e @vars/examples/workflow.yml
@@ -101,14 +101,14 @@ Valores com **espaços** (ex.: `Demo Inventory`) → usar JSON ou ficheiro `-e @
 ```bash
 ./scripts/create-schedule.sh \
   -e schedule_name=daily-backup \
-  -e unified_job_template=meu-job \
+  -e unified_job_template=my-job \
   -e 'rrule=DTSTART:20260614T080000Z RRULE:FREQ=DAILY;INTERVAL=1'
 ```
 
-## Exemplos em vars/examples/
+## Examples in vars/examples/
 
-| Ficheiro | Recurso |
-|----------|---------|
+| File | Resource |
+|------|----------|
 | `organization.yml` | Organization |
 | `project.yml` | Project |
 | `inventory.yml` | Inventory |
@@ -127,10 +127,10 @@ Valores com **espaços** (ex.: `Demo Inventory`) → usar JSON ou ficheiro `-e @
 ## Controller (lab)
 
 - URL: `https://ansible-automation-platform.lagomes.rhbr-lab.com`
-- Org default: `Default`
-- EE local: `ee-cac-rhel9` / `quay.io/lagomes/ee-cac-rhel9:v7`
+- Default org: `Default`
+- Local EE: `ee-cac-rhel9` / `quay.io/lagomes/ee-cac-rhel9:v7`
 
-## Collections (dentro da EE)
+## Collections (inside EE)
 
-- `ansible.controller` — módulos usados nos playbooks
-- `infra.aap_configuration` — roles config-as-code (referência)
+- `ansible.controller` — modules used in playbooks
+- `infra.aap_configuration` — config-as-code roles (reference)

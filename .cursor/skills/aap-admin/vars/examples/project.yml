@@ -5,4 +5,4 @@ organization: Default
 scm_type: git
 scm_url: https://github.com/ansible/ansible-examples.git
 scm_branch: master
-description: Projeto de exemplo
+description: Sample project

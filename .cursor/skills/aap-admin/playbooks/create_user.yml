@@ -26,4 +26,4 @@
         username: "{{ username | mandatory }}"
 
     - ansible.builtin.debug:
-        msg: "User '{{ username }}' em '{{ organization | default(aap_organization_default) }}'"
+        msg: "User '{{ username }}' in '{{ organization | default(aap_organization_default) }}'"

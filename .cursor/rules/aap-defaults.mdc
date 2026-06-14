@@ -1,39 +1,39 @@
 ---
-description: Defaults de inventory, credential e EE no AAP quando não informados
+description: Default inventory, credential, and EE on AAP when not specified
 alwaysApply: true
 ---
 
-# AAP — defaults automáticos
+# AAP — automatic defaults
 
-Quando o utilizador **não informar** inventory, credential ou execution environment (EE), o agente deve usar o **primeiro recurso disponível no AAP** na organização alvo — sem perguntar, salvo ambiguidade crítica.
+When the user **does not specify** inventory, credential, or execution environment (EE), the agent should use the **first available resource in AAP** for the target organization — without asking, unless there is critical ambiguity.
 
-## Ordem de resolução
+## Resolution order
 
 ### Inventory
-1. Inventory da **organização** do recurso (primeiro disponível na API)
-2. Fallback em `vars/aap_defaults.yml`: `aap_inventory_default` (`Demo Inventory`)
+1. First inventory in the target **organization** (via API)
+2. Fallback in `vars/aap_defaults.yml`: `aap_inventory_default` (`Demo Inventory`)
 
 ### Execution environment (EE)
-1. EE default da **organização** (`default_environment`)
-2. EE `Default execution environment` no controller
+1. Organization **default EE** (`default_environment`)
+2. Controller EE `Default execution environment`
 3. Fallback: `aap_ee_default` (`ee-cac-rhel9`)
 
 ### Credential
-1. Primeira credencial **Machine** na organização
-2. Se não existir na org → omitir (não falhar)
-3. Nunca inventar credenciais
+1. First **Machine** credential in the organization
+2. If none exists in the org → omit (do not fail)
+3. Never invent credentials
 
-## Organização
+## Organization
 
-Se não informada → `aap_organization_default` (`Default`), exceto quando o contexto da conversa indicar outra (ex.: `teste cursor`).
+If not specified → `aap_organization_default` (`Default`), except when conversation context indicates another (e.g. `teste cursor`).
 
-## Implementação
+## Implementation
 
-Os playbooks em `.cursor/skills/aap-admin/playbooks/` incluem `tasks/resolve_aap_defaults.yml` quando aplicável. O agente **não precisa** passar `-e inventory=...` se quiser o default.
+Playbooks in `.cursor/skills/aap-admin/playbooks/` include `tasks/resolve_aap_defaults.yml` when applicable. The agent **does not need** to pass `-e inventory=...` when the default is acceptable.
 
-## Exemplo
+## Example
 
-Pedido: *"Cria job template X com project Y e playbook Z na org teste cursor"*
+Request: *"Create job template X with project Y and playbook Z in org teste cursor"*
 
 ```bash
 ./aap create-job-template.sh -e '{
@@ -44,4 +44,4 @@ Pedido: *"Cria job template X com project Y e playbook Z na org teste cursor"*
 }'
 ```
 
-Inventory, EE e credential são resolvidos automaticamente.
+Inventory, EE, and credential are resolved automatically.

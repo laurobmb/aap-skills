@@ -1,5 +1,5 @@
 ---
-# Credenciais — copiar de ../aap-admin/vars/local.yml.example se necessário
+# Credentials — copy from ../aap-admin/vars/local.yml.example if needed
 aap_host: https://ansible-automation-platform.example.com
 aap_username: admin
 aap_password: CHANGE_ME

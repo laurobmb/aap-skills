@@ -22,4 +22,4 @@
         team_name: "{{ team_name | mandatory }}"
 
     - ansible.builtin.debug:
-        msg: "Team '{{ team_name }}' em '{{ organization | default(aap_organization_default) }}'"
+        msg: "Team '{{ team_name }}' in '{{ organization | default(aap_organization_default) }}'"

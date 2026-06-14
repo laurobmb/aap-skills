@@ -25,4 +25,4 @@
         inventory_name: "{{ inventory_name | mandatory }}"
 
     - ansible.builtin.debug:
-        msg: "Inventory '{{ inventory_name }}' em '{{ organization | default(aap_organization_default) }}'"
+        msg: "Inventory '{{ inventory_name }}' in '{{ organization | default(aap_organization_default) }}'"

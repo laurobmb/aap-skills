@@ -1,5 +1,5 @@
 ---
-# Copiar para vars/local.yml e preencher (vars/local.yml está no .gitignore)
+# Copy to vars/local.yml and fill in (vars/local.yml is in .gitignore)
 aap_host: https://ansible-automation-platform.example.com
 aap_username: admin
 aap_password: CHANGE_ME

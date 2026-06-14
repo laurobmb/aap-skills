@@ -1,6 +1,6 @@
 ---
-# Resolve inventory, execution_environment e credentials quando não informados.
-# Usa recursos disponíveis no AAP na organização alvo.
+# Resolve inventory, execution_environment, and credentials when not specified.
+# Uses resources available in AAP for the target organization.
 
 - name: Set target organization
   ansible.builtin.set_fact:

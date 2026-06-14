@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Atalho na raiz do repo → scripts da skill aap-admin
+# Repo root shortcut → aap-admin skill scripts
 set -euo pipefail
 SKILL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.cursor/skills/aap-admin" && pwd)"
-script="${1:?Uso: ./aap <script-name.sh> [args...]}"
+script="${1:?Usage: ./aap <script-name.sh> [args...]}"
 shift
 exec "${SKILL_ROOT}/scripts/${script}" "$@"

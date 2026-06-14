@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Atalho na raiz do repo → scripts da skill aap-operate
+# Repo root shortcut → aap-operate skill scripts
 set -euo pipefail
 SKILL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.cursor/skills/aap-operate" && pwd)"
-script="${1:?Uso: ./operate <script-name.sh> [args...]}"
+script="${1:?Usage: ./operate <script-name.sh> [args...]}"
 shift
 exec "${SKILL_ROOT}/scripts/${script}" "$@"

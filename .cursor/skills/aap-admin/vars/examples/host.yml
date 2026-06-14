@@ -1,6 +1,6 @@
 ---
 host_name: host-test-01
 inventory: aap-skills-inventory
-description: Host de teste
+description: Test host
 variables:
   ansible_host: 192.168.1.10

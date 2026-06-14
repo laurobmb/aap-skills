@@ -31,4 +31,4 @@
         source: "{{ source | mandatory }}"
 
     - ansible.builtin.debug:
-        msg: "Inventory source '{{ source_name }}' ({{ source }}) em '{{ inventory }}'"
+        msg: "Inventory source '{{ source_name }}' ({{ source }}) in '{{ inventory }}'"

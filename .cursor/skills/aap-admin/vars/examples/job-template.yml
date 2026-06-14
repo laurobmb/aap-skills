@@ -6,5 +6,5 @@ inventory: Demo Inventory
 project: Demo Project
 playbook: hello_world.yml
 job_type: run
-description: Job template de exemplo
+description: Sample job template
 execution_environment: ee-cac-rhel9

@@ -29,4 +29,4 @@
 
     - name: Project created
       ansible.builtin.debug:
-        msg: "Project '{{ project_name }}' em '{{ organization | default(aap_organization_default) }}'"
+        msg: "Project '{{ project_name }}' in '{{ organization | default(aap_organization_default) }}'"

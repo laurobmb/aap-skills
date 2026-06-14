@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Helper: corre playbook com ansible-navigator + vars locais do AAP
+# Helper: run playbook with ansible-navigator + local AAP vars
 set -euo pipefail
 
 aap_run() {
@@ -10,13 +10,13 @@ aap_run() {
   local vars_file="${root}/vars/local.yml"
 
   if [[ ! -f "${vars_file}" ]]; then
-    echo "Erro: ${vars_file} não existe. Copie vars/local.yml.example para vars/local.yml." >&2
+    echo "Error: ${vars_file} not found. Copy vars/local.yml.example to vars/local.yml." >&2
     exit 1
   fi
 
   cd "${root}"
   ansible-navigator run "${root}/${playbook}" \
     --mode stdout \
-    -e "@${vars_file}" \
+    -e "@vars/local.yml" \
     "$@"
 }

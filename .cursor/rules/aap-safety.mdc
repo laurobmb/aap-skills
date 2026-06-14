@@ -1,38 +1,38 @@
 ---
-description: Proibição de remoção de recursos AAP sem confirmação humana explícita
+description: AAP resource removal requires explicit human confirmation
 alwaysApply: true
 ---
 
-# AAP — proteção contra remoção
+# AAP — deletion protection
 
-O agente **nunca** remove recursos do AAP sem confirmação humana explícita do utilizador.
+The agent **must never** remove AAP resources without explicit human confirmation from the user.
 
-## Proibido sem confirmação
+## Forbidden without confirmation
 
-- `state: absent` em qualquer módulo `ansible.controller.*`
-- Chamadas **DELETE** à API do Controller (`/api/controller/v2/...`)
-- `curl -X DELETE`, `http DELETE`, ou equivalente contra o AAP
-- Scripts ou playbooks de delete/remove/destroy
-- Alterações idempotentes que **substituam** um recurso existente por ausência (ex.: remover hosts de um group sem pedido)
+- `state: absent` on any `ansible.controller.*` module
+- **DELETE** calls to the Controller API (`/api/controller/v2/...`)
+- `curl -X DELETE`, HTTP DELETE, or equivalent against AAP
+- Delete/remove/destroy scripts or playbooks
+- Idempotent changes that **replace** an existing resource with absence (e.g. removing hosts from a group without being asked)
 
-## Confirmação humana obrigatória
+## Required human confirmation
 
-Antes de qualquer remoção, o agente deve:
+Before any removal, the agent must:
 
-1. **Parar** e informar o utilizador: nome do recurso, tipo, organização e impacto
-2. **Pedir confirmação explícita** (ex.: "Confirma que queres apagar o job template X na org Y?")
-3. **Só executar** após resposta afirmativa e inequívoca do utilizador
+1. **Stop** and inform the user: resource name, type, organization, and impact
+2. **Ask for explicit confirmation** (e.g. "Do you confirm deleting job template X in org Y?")
+3. **Execute only** after a clear affirmative response from the user
 
-Respostas vagas ("ok", "sim" a pergunta errada) ou inferência de intenção **não** contam como confirmação para delete.
+Vague answers ("ok", "yes" to the wrong question) or inferred intent **do not** count as confirmation for delete.
 
-## Operações permitidas sem confirmação extra
+## Allowed without extra confirmation
 
-- `state: present` (criar ou atualizar)
-- Listar recursos (`list-resources.sh`, GET na API)
-- Lançar jobs (`launch-job.sh`)
-- Sync de projects (`sync-project.sh`)
-- Verificar ligação (`verify-aap.sh`)
+- `state: present` (create or update)
+- List resources (`list-resources.sh`, GET on API)
+- Launch jobs (`launch-job.sh`)
+- Sync projects (`sync-project.sh`)
+- Verify connectivity (`verify-aap.sh`)
 
-## Credenciais
+## Credentials
 
-Nunca commitar nem expor credenciais em comandos de remoção ou em logs partilhados.
+Never commit or expose credentials in deletion commands or shared logs.

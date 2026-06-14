@@ -28,4 +28,4 @@
         rrule: "{{ rrule | mandatory }}"
 
     - ansible.builtin.debug:
-        msg: "Schedule '{{ schedule_name }}' para '{{ unified_job_template }}'"
+        msg: "Schedule '{{ schedule_name }}' for '{{ unified_job_template }}'"
