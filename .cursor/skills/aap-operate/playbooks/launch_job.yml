@@ -1,0 +1,35 @@
+---
+- name: Launch AAP job
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+
+    - name: Launch job template
+      ansible.controller.job_launch:
+        job_template: "{{ job_template_name }}"
+        organization: "{{ organization | default(aap_organization_default) }}"
+        inventory: "{{ inventory | default(omit) }}"
+        credentials: "{{ credentials | default(omit) }}"
+        extra_vars: "{{ extra_vars | default(omit) }}"
+        limit: "{{ limit | default(omit) }}"
+        job_type: "{{ job_type | default(omit) }}"
+        wait: "{{ wait | default(true) }}"
+        timeout: "{{ timeout | default(omit) }}"
+        controller_host: "{{ controller_connection.controller_host }}"
+        controller_username: "{{ controller_connection.controller_username }}"
+        controller_password: "{{ controller_connection.controller_password }}"
+        validate_certs: "{{ controller_connection.validate_certs }}"
+      register: launched_job
+      vars:
+        job_template_name: "{{ job_template_name | mandatory }}"
+
+    - name: Job launched
+      ansible.builtin.debug:
+        msg:
+          - "Job ID: {{ launched_job.id }}"
+          - "Status: {{ launched_job.status }}"
+          - "Template: {{ job_template_name }}"

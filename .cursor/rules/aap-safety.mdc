@@ -1,0 +1,38 @@
+---
+description: Proibição de remoção de recursos AAP sem confirmação humana explícita
+alwaysApply: true
+---
+
+# AAP — proteção contra remoção
+
+O agente **nunca** remove recursos do AAP sem confirmação humana explícita do utilizador.
+
+## Proibido sem confirmação
+
+- `state: absent` em qualquer módulo `ansible.controller.*`
+- Chamadas **DELETE** à API do Controller (`/api/controller/v2/...`)
+- `curl -X DELETE`, `http DELETE`, ou equivalente contra o AAP
+- Scripts ou playbooks de delete/remove/destroy
+- Alterações idempotentes que **substituam** um recurso existente por ausência (ex.: remover hosts de um group sem pedido)
+
+## Confirmação humana obrigatória
+
+Antes de qualquer remoção, o agente deve:
+
+1. **Parar** e informar o utilizador: nome do recurso, tipo, organização e impacto
+2. **Pedir confirmação explícita** (ex.: "Confirma que queres apagar o job template X na org Y?")
+3. **Só executar** após resposta afirmativa e inequívoca do utilizador
+
+Respostas vagas ("ok", "sim" a pergunta errada) ou inferência de intenção **não** contam como confirmação para delete.
+
+## Operações permitidas sem confirmação extra
+
+- `state: present` (criar ou atualizar)
+- Listar recursos (`list-resources.sh`, GET na API)
+- Lançar jobs (`launch-job.sh`)
+- Sync de projects (`sync-project.sh`)
+- Verificar ligação (`verify-aap.sh`)
+
+## Credenciais
+
+Nunca commitar nem expor credenciais em comandos de remoção ou em logs partilhados.

@@ -16,6 +16,8 @@ Tudo nesta skill vive em `.cursor/skills/aap-admin/` (playbooks, scripts, vars).
 
 **Sempre** usar os scripts em `.cursor/skills/aap-admin/scripts/` — correm via `ansible-navigator` + EE (sem collections locais).
 
+**Nunca** remover recursos (`state: absent`, DELETE na API) sem confirmação humana explícita — ver `.cursor/rules/aap-safety.mdc`.
+
 ```bash
 # Da raiz do repo
 ./aap create-job-template.sh -e @.cursor/skills/aap-admin/vars/examples/job-template.yml

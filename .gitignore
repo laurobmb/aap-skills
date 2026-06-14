@@ -6,3 +6,4 @@ secrets/
 __pycache__/
 .ansible/
 .cursor/skills/aap-admin/vars/local*.yml
+.cursor/skills/aap-operate/vars/local*.yml

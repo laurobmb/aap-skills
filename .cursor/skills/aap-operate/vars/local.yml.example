@@ -1,0 +1,6 @@
+---
+# Credenciais — copiar de ../aap-admin/vars/local.yml.example se necessário
+aap_host: https://ansible-automation-platform.example.com
+aap_username: admin
+aap_password: CHANGE_ME
+aap_validate_certs: false

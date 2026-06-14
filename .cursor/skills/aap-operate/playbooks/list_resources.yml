@@ -1,0 +1,79 @@
+---
+- name: List AAP resources
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  vars:
+    _resource_endpoints:
+      organizations: /api/controller/v2/organizations/
+      projects: /api/controller/v2/projects/
+      job_templates: /api/controller/v2/job_templates/
+      jobs: /api/controller/v2/jobs/
+      inventories: /api/controller/v2/inventories/
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+
+    - name: Validate resource type
+      ansible.builtin.assert:
+        that:
+          - resource_type in _resource_endpoints
+        fail_msg: >-
+          resource_type inválido. Use:
+          organizations, projects, job_templates, jobs, inventories
+      vars:
+        resource_type: "{{ resource_type | mandatory }}"
+
+    - name: Resolve organization ID for filter
+      when: organization is defined
+      block:
+        - name: Lookup organizations
+          ansible.builtin.uri:
+            url: "{{ aap_host }}/api/controller/v2/organizations/"
+            method: GET
+            user: "{{ aap_username }}"
+            password: "{{ aap_password }}"
+            force_basic_auth: true
+            validate_certs: "{{ aap_validate_certs | default(false) }}"
+            status_code: 200
+          register: _orgs
+
+        - name: Set organization ID
+          ansible.builtin.set_fact:
+            _org_id: "{{ (_orgs.json.results | selectattr('name', 'equalto', organization) | list | first).id }}"
+          when: _orgs.json.results | selectattr('name', 'equalto', organization) | list | length > 0
+
+    - name: Build API URL
+      ansible.builtin.set_fact:
+        _api_url: >-
+          {{ aap_host }}{{ _resource_endpoints[resource_type] }}?page_size={{ page_size | default(25) }}&order_by={{ order_by | default('name') }}
+          {%- if _org_id is defined -%}&organization={{ _org_id }}{%- endif -%}
+          {%- if api_query is defined -%}
+          {%- for k, v in api_query.items() -%}&{{ k }}={{ v | urlencode }}{%- endfor -%}
+          {%- endif -%}
+
+    - name: Fetch resources
+      ansible.builtin.uri:
+        url: "{{ _api_url }}"
+        method: GET
+        user: "{{ aap_username }}"
+        password: "{{ aap_password }}"
+        force_basic_auth: true
+        validate_certs: "{{ aap_validate_certs | default(false) }}"
+        status_code: 200
+      register: _resource_list
+
+    - name: Show resources
+      ansible.builtin.debug:
+        msg: >-
+          id={{ item.id }} | name={{ item.name | default('n/a') }}
+          {%- if item.status is defined %} | status={{ item.status }}{%- endif -%}
+          {%- if item.summary_fields.organization is defined %} | org={{ item.summary_fields.organization.name }}{%- endif -%}
+      loop: "{{ _resource_list.json.results }}"
+      loop_control:
+        label: "{{ item.id }}"
+
+    - name: Total count
+      ansible.builtin.debug:
+        msg: "{{ resource_type }}: {{ _resource_list.json.count }} encontrado(s)"

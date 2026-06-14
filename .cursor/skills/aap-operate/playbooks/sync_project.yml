@@ -1,0 +1,30 @@
+---
+- name: Sync AAP project (SCM update)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+
+    - name: Update project from SCM
+      ansible.controller.project_update:
+        name: "{{ project_name }}"
+        organization: "{{ organization | default(aap_organization_default) }}"
+        wait: "{{ wait | default(true) }}"
+        timeout: "{{ timeout | default(300) }}"
+        controller_host: "{{ controller_connection.controller_host }}"
+        controller_username: "{{ controller_connection.controller_username }}"
+        controller_password: "{{ controller_connection.controller_password }}"
+        validate_certs: "{{ controller_connection.validate_certs }}"
+      register: project_sync
+      vars:
+        project_name: "{{ project_name | mandatory }}"
+
+    - name: Project sync result
+      ansible.builtin.debug:
+        msg:
+          - "Project: {{ project_name }}"
+          - "Status: {{ project_sync.status | default('updated') }}"
+          - "Job ID: {{ project_sync.id | default('n/a') }}"

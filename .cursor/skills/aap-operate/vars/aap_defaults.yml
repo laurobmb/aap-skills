@@ -1,0 +1,8 @@
+---
+controller_connection:
+  controller_host: "{{ aap_host }}"
+  controller_username: "{{ aap_username }}"
+  controller_password: "{{ aap_password }}"
+  validate_certs: "{{ aap_validate_certs | default(false) }}"
+
+aap_organization_default: Default
