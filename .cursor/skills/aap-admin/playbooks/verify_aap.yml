@@ -1,0 +1,34 @@
+---
+- name: Verify AAP connectivity
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Ping controller API
+      ansible.builtin.uri:
+        url: "{{ aap_host }}/api/controller/v2/ping/"
+        method: GET
+        user: "{{ aap_username }}"
+        password: "{{ aap_password }}"
+        force_basic_auth: true
+        validate_certs: "{{ aap_validate_certs | default(true) }}"
+        status_code: 200
+      register: ping
+
+    - name: Show controller version
+      ansible.builtin.uri:
+        url: "{{ aap_host }}/api/controller/v2/config/"
+        method: GET
+        user: "{{ aap_username }}"
+        password: "{{ aap_password }}"
+        force_basic_auth: true
+        validate_certs: "{{ aap_validate_certs | default(true) }}"
+        status_code: 200
+      register: config
+
+    - name: Connectivity OK
+      ansible.builtin.debug:
+        msg:
+          - "AAP: {{ aap_host }}"
+          - "Version: {{ config.json.version | default('n/a') }}"
+          - "Ping: {{ ping.json }}"

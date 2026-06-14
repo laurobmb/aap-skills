@@ -1,0 +1,13 @@
+---
+# Variáveis comuns de ligação ao controller (credenciais vêm de vars/local.yml)
+controller_connection:
+  controller_host: "{{ aap_host }}"
+  controller_username: "{{ aap_username }}"
+  controller_password: "{{ aap_password }}"
+  validate_certs: "{{ aap_validate_certs | default(false) }}"
+
+# Defaults do lab (fallback quando o AAP não define explicitamente)
+aap_organization_default: Default
+aap_inventory_default: Demo Inventory
+aap_ee_default: ee-cac-rhel9
+aap_ee_system_default: Default execution environment

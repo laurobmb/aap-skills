@@ -1,0 +1,32 @@
+---
+- name: Create AAP project
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+    - ansible.builtin.import_tasks: tasks/resolve_aap_defaults.yml
+
+    - name: Create or update project
+      ansible.controller.project:
+        name: "{{ project_name }}"
+        organization: "{{ organization | default(aap_organization_default) }}"
+        description: "{{ description | default('') }}"
+        scm_type: "{{ scm_type | default('git') }}"
+        scm_url: "{{ scm_url if (scm_type | default('git')) != 'manual' else omit }}"
+        scm_branch: "{{ scm_branch | default('main') if (scm_type | default('git')) == 'git' else omit }}"
+        default_environment: "{{ execution_environment | default(omit) }}"
+        update_project: "{{ update_project | default((scm_type | default('git')) != 'manual') }}"
+        state: present
+        controller_host: "{{ controller_connection.controller_host }}"
+        controller_username: "{{ controller_connection.controller_username }}"
+        controller_password: "{{ controller_connection.controller_password }}"
+        validate_certs: "{{ controller_connection.validate_certs }}"
+      vars:
+        project_name: "{{ project_name | mandatory }}"
+
+    - name: Project created
+      ansible.builtin.debug:
+        msg: "Project '{{ project_name }}' em '{{ organization | default(aap_organization_default) }}'"

@@ -1,0 +1,8 @@
+---
+# Exemplo: project Git
+project_name: meu-projeto
+organization: Default
+scm_type: git
+scm_url: https://github.com/ansible/ansible-examples.git
+scm_branch: master
+description: Projeto de exemplo

@@ -1,0 +1,28 @@
+---
+- name: Create AAP execution environment
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+
+    - name: Create or update execution environment
+      ansible.controller.execution_environment:
+        name: "{{ ee_name }}"
+        image: "{{ image }}"
+        organization: "{{ organization | default(aap_organization_default) }}"
+        description: "{{ description | default('') }}"
+        pull: "{{ pull | default(omit) }}"
+        state: present
+        controller_host: "{{ controller_connection.controller_host }}"
+        controller_username: "{{ controller_connection.controller_username }}"
+        controller_password: "{{ controller_connection.controller_password }}"
+        validate_certs: "{{ controller_connection.validate_certs }}"
+      vars:
+        ee_name: "{{ ee_name | mandatory }}"
+        image: "{{ image | mandatory }}"
+
+    - ansible.builtin.debug:
+        msg: "Execution environment '{{ ee_name }}' → {{ image }}"

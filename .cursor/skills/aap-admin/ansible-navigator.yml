@@ -1,0 +1,21 @@
+---
+ansible-navigator:
+  ansible:
+    playbook:
+      path: ./playbooks
+  execution-environment:
+    container-engine: auto
+    enabled: true
+    image: quay.io/lagomes/ee-cac-rhel9:v7
+    pull:
+      policy: missing
+    volume-mounts:
+      - src: .
+        dest: /runner/project
+        options: Z
+  logging:
+    level: warning
+  mode: stdout
+  playbook-artifact:
+    enable: true
+    save-as: artifacts/{playbook_name}-{time_stamp}.json

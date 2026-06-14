@@ -1,0 +1,29 @@
+---
+- name: Create AAP user
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+
+    - name: Create or update user
+      ansible.controller.user:
+        username: "{{ username }}"
+        password: "{{ password | default(omit) }}"
+        first_name: "{{ first_name | default('') }}"
+        last_name: "{{ last_name | default('') }}"
+        email: "{{ email | default('') }}"
+        organization: "{{ organization | default(aap_organization_default) }}"
+        is_superuser: "{{ is_superuser | default(false) }}"
+        state: present
+        controller_host: "{{ controller_connection.controller_host }}"
+        controller_username: "{{ controller_connection.controller_username }}"
+        controller_password: "{{ controller_connection.controller_password }}"
+        validate_certs: "{{ controller_connection.validate_certs }}"
+      vars:
+        username: "{{ username | mandatory }}"
+
+    - ansible.builtin.debug:
+        msg: "User '{{ username }}' em '{{ organization | default(aap_organization_default) }}'"

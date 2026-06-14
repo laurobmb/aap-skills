@@ -1,0 +1,8 @@
+---
+notification_name: aap-skills-webhook-test
+organization: Default
+notification_type: webhook
+notification_configuration:
+  url: https://httpbin.org/post
+  http_method: POST
+  headers: {}

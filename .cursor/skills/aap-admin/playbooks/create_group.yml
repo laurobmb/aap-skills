@@ -1,0 +1,29 @@
+---
+- name: Create AAP inventory group
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+
+    - name: Create or update group
+      ansible.controller.group:
+        name: "{{ group_name }}"
+        inventory: "{{ inventory }}"
+        description: "{{ description | default('') }}"
+        parent: "{{ parent | default(omit) }}"
+        variables: "{{ variables | default(omit) }}"
+        hosts: "{{ group_hosts | default(omit) }}"
+        state: present
+        controller_host: "{{ controller_connection.controller_host }}"
+        controller_username: "{{ controller_connection.controller_username }}"
+        controller_password: "{{ controller_connection.controller_password }}"
+        validate_certs: "{{ controller_connection.validate_certs }}"
+      vars:
+        group_name: "{{ group_name | mandatory }}"
+        inventory: "{{ inventory | mandatory }}"
+
+    - ansible.builtin.debug:
+        msg: "Group '{{ group_name }}' no inventory '{{ inventory }}'"

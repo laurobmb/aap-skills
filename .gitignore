@@ -1,0 +1,8 @@
+artifacts/
+*.log
+.env
+.env.*
+secrets/
+__pycache__/
+.ansible/
+.cursor/skills/aap-admin/vars/local*.yml

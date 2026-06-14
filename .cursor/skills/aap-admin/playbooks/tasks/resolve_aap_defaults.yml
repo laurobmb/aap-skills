@@ -1,0 +1,139 @@
+---
+# Resolve inventory, execution_environment e credentials quando não informados.
+# Usa recursos disponíveis no AAP na organização alvo.
+
+- name: Set target organization
+  ansible.builtin.set_fact:
+    _aap_org: "{{ organization | default(aap_organization_default) }}"
+
+- name: Lookup organization ID
+  ansible.builtin.uri:
+    url: "{{ aap_host }}/api/controller/v2/organizations/"
+    method: GET
+    user: "{{ aap_username }}"
+    password: "{{ aap_password }}"
+    force_basic_auth: true
+    validate_certs: "{{ aap_validate_certs | default(false) }}"
+    status_code: 200
+  register: _aap_orgs
+  when: >-
+    inventory is not defined or
+    execution_environment is not defined or
+    credentials is not defined
+
+- name: Find organization ID
+  ansible.builtin.set_fact:
+    _aap_org_id: "{{ item.id }}"
+  loop: "{{ _aap_orgs.json.results }}"
+  when:
+    - _aap_orgs is defined
+    - item.name == _aap_org
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Resolve default inventory
+  when: inventory is not defined
+  block:
+    - name: List inventories in organization
+      ansible.builtin.uri:
+        url: "{{ aap_host }}/api/controller/v2/inventories/?organization={{ _aap_org_id }}&order_by=name&page_size=1"
+        method: GET
+        user: "{{ aap_username }}"
+        password: "{{ aap_password }}"
+        force_basic_auth: true
+        validate_certs: "{{ aap_validate_certs | default(false) }}"
+        status_code: 200
+      register: _aap_inv_lookup
+      when: _aap_org_id is defined
+
+    - name: Use first inventory in organization
+      ansible.builtin.set_fact:
+        inventory: "{{ _aap_inv_lookup.json.results[0].name }}"
+      when:
+        - _aap_inv_lookup is defined
+        - _aap_inv_lookup.json.count | int > 0
+
+    - name: Fallback to lab inventory default
+      ansible.builtin.set_fact:
+        inventory: "{{ aap_inventory_default }}"
+      when: inventory is not defined
+
+- name: Resolve default execution environment
+  when: execution_environment is not defined
+  block:
+    - name: Get organization default EE
+      ansible.builtin.uri:
+        url: "{{ aap_host }}/api/controller/v2/organizations/{{ _aap_org_id }}/"
+        method: GET
+        user: "{{ aap_username }}"
+        password: "{{ aap_password }}"
+        force_basic_auth: true
+        validate_certs: "{{ aap_validate_certs | default(false) }}"
+        status_code: 200
+      register: _aap_org_detail
+      when: _aap_org_id is defined
+
+    - name: Use organization default EE
+      ansible.builtin.set_fact:
+        execution_environment: "{{ _aap_org_detail.json.summary_fields.default_environment.name }}"
+      when:
+        - _aap_org_detail is defined
+        - _aap_org_detail.json.summary_fields.default_environment is defined
+        - _aap_org_detail.json.summary_fields.default_environment.name | default('') | length > 0
+
+    - name: Lookup system default EE by name
+      ansible.builtin.uri:
+        url: "{{ aap_host }}/api/controller/v2/execution_environments/?name={{ aap_ee_system_default | urlencode }}"
+        method: GET
+        user: "{{ aap_username }}"
+        password: "{{ aap_password }}"
+        force_basic_auth: true
+        validate_certs: "{{ aap_validate_certs | default(false) }}"
+        status_code: 200
+      register: _aap_ee_system
+      when: execution_environment is not defined
+
+    - name: Use system default EE
+      ansible.builtin.set_fact:
+        execution_environment: "{{ _aap_ee_system.json.results[0].name }}"
+      when:
+        - execution_environment is not defined
+        - _aap_ee_system is defined
+        - _aap_ee_system.json.count | int > 0
+
+    - name: Fallback to lab EE default
+      ansible.builtin.set_fact:
+        execution_environment: "{{ aap_ee_default }}"
+      when: execution_environment is not defined
+
+- name: Resolve default Machine credential
+  when: credentials is not defined
+  block:
+    - name: List Machine credentials in organization
+      ansible.builtin.uri:
+        url: "{{ aap_host }}/api/controller/v2/credentials/?organization={{ _aap_org_id }}&credential_type=1&order_by=name&page_size=1"
+        method: GET
+        user: "{{ aap_username }}"
+        password: "{{ aap_password }}"
+        force_basic_auth: true
+        validate_certs: "{{ aap_validate_certs | default(false) }}"
+        status_code: 200
+      register: _aap_cred_lookup
+      when: _aap_org_id is defined
+
+    - name: Use first Machine credential in organization
+      ansible.builtin.set_fact:
+        credentials:
+          - "{{ _aap_cred_lookup.json.results[0].name }}"
+      when:
+        - _aap_cred_lookup is defined
+        - _aap_cred_lookup.json.count | int > 0
+
+- name: Show resolved defaults
+  ansible.builtin.debug:
+    msg:
+      organization: "{{ _aap_org }}"
+      inventory: "{{ inventory | default('n/a') }}"
+      execution_environment: "{{ execution_environment | default('n/a') }}"
+      credentials: "{{ credentials | default('n/a') }}"
+  when: _show_resolved_defaults | default(true)

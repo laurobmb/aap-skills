@@ -1,0 +1,10 @@
+---
+workflow_name: aap-skills-workflow-test
+organization: Default
+description: Workflow de teste
+inventory: Demo Inventory
+workflow_nodes:
+  - identifier: node1
+    unified_job_template:
+      name: aap-skills-test-hello
+      type: job_template

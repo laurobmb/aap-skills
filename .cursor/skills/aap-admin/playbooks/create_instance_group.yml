@@ -1,0 +1,27 @@
+---
+- name: Create AAP instance group
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+
+    - name: Create or update instance group
+      ansible.controller.instance_group:
+        name: "{{ instance_group_name }}"
+        instances: "{{ instances | default(omit) }}"
+        is_container_group: "{{ is_container_group | default(false) }}"
+        credential: "{{ credential | default(omit) }}"
+        max_concurrent_jobs: "{{ max_concurrent_jobs | default(omit) }}"
+        state: present
+        controller_host: "{{ controller_connection.controller_host }}"
+        controller_username: "{{ controller_connection.controller_username }}"
+        controller_password: "{{ controller_connection.controller_password }}"
+        validate_certs: "{{ controller_connection.validate_certs }}"
+      vars:
+        instance_group_name: "{{ instance_group_name | mandatory }}"
+
+    - ansible.builtin.debug:
+        msg: "Instance group '{{ instance_group_name }}'"

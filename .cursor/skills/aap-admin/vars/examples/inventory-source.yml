@@ -1,0 +1,8 @@
+---
+source_name: aap-skills-scm-source
+inventory: aap-skills-inventory
+source: scm
+source_project: Demo Project
+source_path: inventories
+overwrite: true
+update_on_launch: true

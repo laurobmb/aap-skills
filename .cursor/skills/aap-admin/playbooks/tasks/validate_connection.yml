@@ -1,0 +1,9 @@
+---
+# Incluir no início de cada playbook de criação de recurso
+- name: Validate controller credentials
+  ansible.builtin.assert:
+    that:
+      - aap_host is defined
+      - aap_username is defined
+      - aap_password is defined
+    fail_msg: "Credenciais em falta. Configure vars/local.yml"

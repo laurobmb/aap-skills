@@ -1,0 +1,40 @@
+---
+- name: Create AAP notification template
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+
+    - name: Validate notification configuration
+      ansible.builtin.assert:
+        that:
+          - notification_configuration is defined
+        fail_msg: >-
+          Defina notification_configuration, ex.:
+          -e notification_type=webhook
+          -e '{"notification_configuration":{"url":"https://example.com/hook"}}'
+      vars:
+        notification_name: "{{ notification_name | mandatory }}"
+
+    - name: Create or update notification template
+      ansible.controller.notification_template:
+        name: "{{ notification_name }}"
+        organization: "{{ organization | default(aap_organization_default) }}"
+        notification_type: "{{ notification_type }}"
+        description: "{{ description | default('') }}"
+        notification_configuration: "{{ notification_configuration }}"
+        messages: "{{ messages | default(omit) }}"
+        state: present
+        controller_host: "{{ controller_connection.controller_host }}"
+        controller_username: "{{ controller_connection.controller_username }}"
+        controller_password: "{{ controller_connection.controller_password }}"
+        validate_certs: "{{ controller_connection.validate_certs }}"
+      vars:
+        notification_name: "{{ notification_name | mandatory }}"
+        notification_type: "{{ notification_type | mandatory }}"
+
+    - ansible.builtin.debug:
+        msg: "Notification '{{ notification_name }}' ({{ notification_type }})"

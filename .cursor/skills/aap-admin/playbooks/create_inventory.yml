@@ -1,0 +1,28 @@
+---
+- name: Create AAP inventory
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+
+    - name: Create or update inventory
+      ansible.controller.inventory:
+        name: "{{ inventory_name }}"
+        organization: "{{ organization | default(aap_organization_default) }}"
+        description: "{{ description | default('') }}"
+        kind: "{{ kind | default('') }}"
+        host_filter: "{{ host_filter | default(omit) }}"
+        variables: "{{ variables | default(omit) }}"
+        state: present
+        controller_host: "{{ controller_connection.controller_host }}"
+        controller_username: "{{ controller_connection.controller_username }}"
+        controller_password: "{{ controller_connection.controller_password }}"
+        validate_certs: "{{ controller_connection.validate_certs }}"
+      vars:
+        inventory_name: "{{ inventory_name | mandatory }}"
+
+    - ansible.builtin.debug:
+        msg: "Inventory '{{ inventory_name }}' em '{{ organization | default(aap_organization_default) }}'"

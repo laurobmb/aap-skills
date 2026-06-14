@@ -1,0 +1,5 @@
+---
+schedule_name: aap-skills-weekly
+unified_job_template: aap-skills-test-hello
+organization: Default
+rrule: "DTSTART:20260614T120000Z RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=10"

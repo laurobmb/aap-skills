@@ -1,0 +1,5 @@
+---
+ee_name: aap-skills-ee-test
+organization: Default
+image: quay.io/lagomes/ee-cac-rhel9:v7
+description: EE de teste via aap-skills

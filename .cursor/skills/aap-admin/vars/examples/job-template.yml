@@ -1,0 +1,10 @@
+---
+# Exemplo: job template
+job_template_name: ping-demo
+organization: Default
+inventory: Demo Inventory
+project: Demo Project
+playbook: hello_world.yml
+job_type: run
+description: Job template de exemplo
+execution_environment: ee-cac-rhel9

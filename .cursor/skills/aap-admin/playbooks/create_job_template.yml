@@ -1,0 +1,41 @@
+---
+- name: Create AAP job template
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/aap_defaults.yml
+  tasks:
+    - ansible.builtin.import_tasks: tasks/validate_connection.yml
+    - ansible.builtin.import_tasks: tasks/resolve_aap_defaults.yml
+
+    - name: Create or update job template
+      ansible.controller.job_template:
+        name: "{{ job_template_name }}"
+        organization: "{{ organization | default(aap_organization_default) }}"
+        inventory: "{{ inventory }}"
+        project: "{{ project }}"
+        playbook: "{{ playbook }}"
+        job_type: "{{ job_type | default('run') }}"
+        description: "{{ description | default('') }}"
+        credentials: "{{ credentials | default(omit) }}"
+        execution_environment: "{{ execution_environment | default(omit) }}"
+        extra_vars: "{{ extra_vars | default(omit) }}"
+        survey_enabled: "{{ survey_enabled | default(false) }}"
+        become_enabled: "{{ become_enabled | default(false) }}"
+        limit: "{{ limit | default(omit) }}"
+        state: present
+        controller_host: "{{ controller_connection.controller_host }}"
+        controller_username: "{{ controller_connection.controller_username }}"
+        controller_password: "{{ controller_connection.controller_password }}"
+        validate_certs: "{{ controller_connection.validate_certs }}"
+      vars:
+        job_template_name: "{{ job_template_name | mandatory }}"
+        project: "{{ project | mandatory }}"
+        playbook: "{{ playbook | mandatory }}"
+
+    - name: Job template created
+      ansible.builtin.debug:
+        msg: >-
+          Job template '{{ job_template_name }}':
+          {{ project }}/{{ playbook }} → {{ inventory }}

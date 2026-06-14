@@ -1,0 +1,4 @@
+---
+group_name: webservers
+inventory: aap-skills-inventory
+description: Grupo web

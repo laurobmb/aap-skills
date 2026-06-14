@@ -1,0 +1,47 @@
+---
+description: Defaults de inventory, credential e EE no AAP quando não informados
+alwaysApply: true
+---
+
+# AAP — defaults automáticos
+
+Quando o utilizador **não informar** inventory, credential ou execution environment (EE), o agente deve usar o **primeiro recurso disponível no AAP** na organização alvo — sem perguntar, salvo ambiguidade crítica.
+
+## Ordem de resolução
+
+### Inventory
+1. Inventory da **organização** do recurso (primeiro disponível na API)
+2. Fallback em `vars/aap_defaults.yml`: `aap_inventory_default` (`Demo Inventory`)
+
+### Execution environment (EE)
+1. EE default da **organização** (`default_environment`)
+2. EE `Default execution environment` no controller
+3. Fallback: `aap_ee_default` (`ee-cac-rhel9`)
+
+### Credential
+1. Primeira credencial **Machine** na organização
+2. Se não existir na org → omitir (não falhar)
+3. Nunca inventar credenciais
+
+## Organização
+
+Se não informada → `aap_organization_default` (`Default`), exceto quando o contexto da conversa indicar outra (ex.: `teste cursor`).
+
+## Implementação
+
+Os playbooks em `.cursor/skills/aap-admin/playbooks/` incluem `tasks/resolve_aap_defaults.yml` quando aplicável. O agente **não precisa** passar `-e inventory=...` se quiser o default.
+
+## Exemplo
+
+Pedido: *"Cria job template X com project Y e playbook Z na org teste cursor"*
+
+```bash
+./aap create-job-template.sh -e '{
+  "job_template_name":"X",
+  "organization":"teste cursor",
+  "project":"Y",
+  "playbook":"Z"
+}'
+```
+
+Inventory, EE e credential são resolvidos automaticamente.
