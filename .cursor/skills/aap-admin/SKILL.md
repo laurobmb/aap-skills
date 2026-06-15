@@ -122,6 +122,7 @@ Naming convention: `NN-<resource>-<name>.yml` (e.g. `02-project-aap-backup.yml`)
 | Deployment | Organization | Purpose |
 |------------|--------------|---------|
 | `teste-cursor` | `teste cursor` | AAP backup automation stack |
+| `crucible` | `crucible` | Crucible OpenShift playbooks |
 
 See `deployments/README.md` to add new stacks.
 

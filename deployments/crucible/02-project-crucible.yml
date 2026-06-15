@@ -1,0 +1,7 @@
+---
+project_name: crucible
+organization: crucible
+scm_type: git
+scm_url: https://github.com/laurobmb/crucible.git
+scm_branch: main
+description: Crucible - OpenShift management cluster seed playbooks

@@ -31,5 +31,5 @@ Files are numbered for dependency order (org → project → inventory → hosts
 ## Notes
 
 - Idempotent: safe to re-run (`state: present` on all resources).
-- Credentials are not included — add Machine credentials manually or extend with `11-credential-*.yml`.
+- Credentials are not included — add Machine credentials manually or extend with a new `NN-credential-*.yml` file.
 - `backup-aap` requires a Machine credential on the controller nodes before launch.

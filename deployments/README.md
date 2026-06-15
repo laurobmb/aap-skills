@@ -6,6 +6,7 @@ Versioned AAP resource stacks — environment configuration, separate from skill
 deployments/
 ├── README.md
 ├── teste-cursor/          # org "teste cursor" — backup automation
+├── crucible/              # org "crucible" — OpenShift Crucible playbooks
 │   ├── README.md
 │   ├── 01-organization.yml
 │   └── ...
