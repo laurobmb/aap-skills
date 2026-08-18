@@ -10,7 +10,7 @@ description: >-
 
 # AAP Operate (2.6)
 
-Skill at `.cursor/skills/aap-operate/`. Complements `aap-admin` (creation) with **day-to-day operations**.
+Skill directory is next to this `SKILL.md` (also `~/.cursor/skills/aap-operate/`). Complements `aap-admin` (creation) with **day-to-day operations**.
 
 **Never** remove resources (`state: absent`, API DELETE) without explicit human confirmation — see `.cursor/rules/aap-safety.mdc`.
 
@@ -27,10 +27,13 @@ Credentials: `vars/local.yml` or shared from `../aap-admin/vars/local.yml`.
 ## Usage
 
 ```bash
-# From repo root
+# From this skill directory
+./scripts/launch-job.sh -e @vars/examples/launch-job.yml
+./scripts/sync-project.sh -e project_name=aap_backup_automation -e organization="teste cursor"
+./scripts/list-resources.sh -e resource_type=job_templates -e organization="teste cursor"
+
+# From aap-skills repo root
 ./operate launch-job.sh -e @.cursor/skills/aap-operate/vars/examples/launch-job.yml
-./operate sync-project.sh -e project_name=aap_backup_automation -e organization="teste cursor"
-./operate list-resources.sh -e resource_type=job_templates -e organization="teste cursor"
 ```
 
 Values with spaces → JSON or `-e @vars/examples/...` (paths relative to the skill directory).

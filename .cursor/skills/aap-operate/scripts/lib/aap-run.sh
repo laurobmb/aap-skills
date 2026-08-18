@@ -6,7 +6,7 @@ aap_run() {
   local playbook="$1"
   shift
   local root
-  root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+  root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
   local vars_file="${root}/vars/local.yml"
   local shared_vars="${root}/../aap-admin/vars/local.yml"
 

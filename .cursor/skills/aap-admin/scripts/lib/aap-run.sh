@@ -6,9 +6,9 @@ aap_run() {
   local playbook="$1"
   shift
   local root
-  root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+  root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
   local repo_root
-  repo_root="$(cd "${root}/../../.." && pwd)"
+  repo_root="$(cd "${root}/../../.." && pwd -P)"
   local vars_file="${root}/vars/local.yml"
 
   if [[ ! -f "${vars_file}" ]]; then

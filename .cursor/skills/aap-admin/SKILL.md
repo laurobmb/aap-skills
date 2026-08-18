@@ -10,24 +10,23 @@ description: >-
 
 # AAP Admin (2.6)
 
-Everything in this skill lives under `.cursor/skills/aap-admin/` (playbooks, scripts, vars).
+Everything in this skill lives next to this `SKILL.md` (playbooks, scripts, vars). Also available as a user skill at `~/.cursor/skills/aap-admin/`.
 
 ## Main rule
 
-**Always** use scripts in `.cursor/skills/aap-admin/scripts/` — they run via `ansible-navigator` + EE (no local collections).
+**Always** use scripts in `scripts/` — they run via `ansible-navigator` + EE (no local collections).
 
 **Never** remove resources (`state: absent`, API DELETE) without explicit human confirmation — see `.cursor/rules/aap-safety.mdc`.
 
 ```bash
-# From repo root
-./aap create-job-template.sh -e @.cursor/skills/aap-admin/vars/examples/job-template.yml
-
-# Or inside the skill
-cd .cursor/skills/aap-admin
+# From this skill directory
 ./scripts/create-<resource>.sh -e @vars/examples/<resource>.yml
+
+# From aap-skills repo root
+./aap create-job-template.sh -e @.cursor/skills/aap-admin/vars/examples/job-template.yml
 ```
 
-Controller credentials: `.cursor/skills/aap-admin/vars/local.yml` (gitignored).
+Controller credentials: `vars/local.yml` (gitignored).
 
 ## Automatic defaults
 

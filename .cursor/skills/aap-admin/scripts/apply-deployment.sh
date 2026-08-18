@@ -4,9 +4,9 @@ set -euo pipefail
 
 deployment="${1:?Usage: apply-deployment.sh <deployment-name>}"
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-skill_root="$(cd "${script_dir}/.." && pwd)"
-repo_root="$(cd "${skill_root}/../../.." && pwd)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+skill_root="$(cd "${script_dir}/.." && pwd -P)"
+repo_root="$(cd "${skill_root}/../../.." && pwd -P)"
 deploy_dir="${repo_root}/deployments/${deployment}"
 
 if [[ ! -d "${deploy_dir}" ]]; then
